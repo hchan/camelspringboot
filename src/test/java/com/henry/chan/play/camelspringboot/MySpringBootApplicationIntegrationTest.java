@@ -12,29 +12,34 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.NotifyBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.test.spring.CamelSpringBootRunner;
 import org.apache.commons.lang3.mutable.MutableBoolean;
-
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import static org.junit.Assert.*;
 
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * Test Class with Camel @{@link RouteDefinition#adviceWith(CamelContext, RouteBuilder)}, and @{@link NotifyBuilder}
  * Note that I am using a @{@link CountDownLatch} to notify me when {@link DoneRouter} has ran
  */
-@RunWith(SpringJUnit4ClassRunner.class)
+//@RunWith(SpringJUnit4ClassRunner.class) ... only works with Junit4
+@RunWith(CamelSpringBootRunner.class)
 @SpringBootTest(classes = {MySpringBootApplication.class})
 @ActiveProfiles({ "test" })
 @Slf4j
+
 public class MySpringBootApplicationIntegrationTest {
     public static final String PAYLOAD = "Payload from " + MySpringBootApplicationIntegrationTest.class.getSimpleName() + "!!";
 
@@ -53,7 +58,7 @@ public class MySpringBootApplicationIntegrationTest {
 
     private Map<String, NotifyBuilder> notifyBuilders = new LinkedHashMap<>();
     private CountDownLatch countDownLatch = new CountDownLatch(1); // latch needed because of Camel's notifyBuilder bug
-    @BeforeClass
+    @BeforeAll
     public static void beforeClass() {
         System.setProperty("dummybusinessrouter.cron", "0 0 0 1 1 ? 2099");
         DummyBusinessRouter.PAYLOAD = PAYLOAD;
