@@ -14,14 +14,9 @@ import org.springframework.stereotype.Component;
  */
 @Component("myBean")
 public class MySpringBean {
-
     @Value("${greeting}")
     private String say;
-
-
     public String saySomething() {
         return say;
     }
-
-
 }
